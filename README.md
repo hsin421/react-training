@@ -2,7 +2,7 @@
 --
 
 ## To set up
-`npm install`
-`npm run dev`
-open up browser `localhost:8080`
+- `npm install`
+- `npm run dev`
+- open up browser `localhost:8080`
 
