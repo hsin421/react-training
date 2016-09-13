@@ -1,5 +1,4 @@
 # React Redux Training Material
---
 
 ## To set up
 - `npm install`
