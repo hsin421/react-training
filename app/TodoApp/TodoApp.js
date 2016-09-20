@@ -2,27 +2,20 @@ import React from 'react';
 import TodoInput from './TodoInput';
 import TodoBoard from './TodoBoard';
 import { storedTodos } from './db';
+import { connect } from 'react-redux';
+import { addTodo, loadTodos, handleInput } from '../redux/actions';
 
-export default class TodoApp extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			myTodos: [],
-			inputValue: ''
-		};
-	}
-
+class TodoApp extends React.Component {
 	componentDidMount() {
-		// call server
+		// call to server
 		storedTodos((data: Array<string>) => {
-			this.setState({
-				myTodos: [...this.state.myTodos, ...data]
-			})
+			this.props.dispatch(loadTodos(data));
 		})
 	}
 
 	handleInput = (event) => {
-		this.setState({ inputValue: event.target.value});
+		this.props.dispatch(handleInput(event.target.value))
+		// this.setState({ inputValue: event.target.value});
 	}
 
 	// const array = [1, 2, 3];
@@ -32,11 +25,8 @@ export default class TodoApp extends React.Component {
 	// const obj2 = { ...obj, c: 3};
 	// const obj2 = { a: 1, b: 2, c: 3}
 	handleSubmit = () => {
-		const { myTodos, inputValue } = this.state;
-		this.setState({
-			myTodos: [...myTodos, inputValue],
-			inputValue: ''
-		})
+		const { inputValue, dispatch } = this.props;
+		dispatch(addTodo(inputValue));
 	}
 
 	handleKeyDown = (event) => {
@@ -46,11 +36,11 @@ export default class TodoApp extends React.Component {
 	}
 
 	handleDelete = (deletingIndex) => {
-		this.setState({
-			myTodos: this.state.myTodos.filter(
-				(todo, index) => index !== deletingIndex
-			)
-		})
+		// this.setState({
+		// 	myTodos: this.state.myTodos.filter(
+		// 		(todo, index) => index !== deletingIndex
+		// 	)
+		// })
 	}
 
 	render() {
@@ -60,14 +50,24 @@ export default class TodoApp extends React.Component {
 				<TodoInput 
 					handleInput={this.handleInput}
 					handleKeyDown={this.handleKeyDown}
-					inputValue={this.state.inputValue}
+					inputValue={this.props.inputValue}
 					handleSubmit={this.handleSubmit}
 				/>
 				<TodoBoard 
-					myTodos={this.state.myTodos}
+					myTodos={this.props.myTodos}
 					handleDelete={this.handleDelete}
 				/>
 			</div>
 		);
 	}
 }
+
+const mapStateToProps = (state) => {
+	return {
+		myTodos: state.todo.myTodos,
+		inputValue: state.todo.inputValue
+	}
+}
+
+let ReduxTodoApp = connect(mapStateToProps)(TodoApp);
+export default ReduxTodoApp;
