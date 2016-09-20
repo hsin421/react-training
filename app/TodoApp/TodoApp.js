@@ -25,6 +25,12 @@ export default class TodoApp extends React.Component {
 		this.setState({ inputValue: event.target.value});
 	}
 
+	// const array = [1, 2, 3];
+	// const array2 = [...array, 4];
+	// array2 = [1, 2, 3, 4];
+	// const obj = { a: 1, b: 2};
+	// const obj2 = { ...obj, c: 3};
+	// const obj2 = { a: 1, b: 2, c: 3}
 	handleSubmit = () => {
 		const { myTodos, inputValue } = this.state;
 		this.setState({
