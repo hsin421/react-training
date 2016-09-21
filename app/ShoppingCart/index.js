@@ -1,36 +1,34 @@
 import React from 'react';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import { loadProducts, addToCart, removeFromCart } from '../redux/shoppingCartActions'
 
 export default class ShoppingCart extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			products: [],
-			cart: []
-		};
-	}
 	componentDidMount() {
 		// call 'reactjs102.herokuapp.com/products'
 		// axios, isomorphic-fetch, jquery.ajax
 		// axios (data -> this.setState({ products: data}) )
 		axios.get('https://reactjs102.herokuapp.com/products')
 		.then( res => {
-			this.setState({ products: res.data })
+			// this.setState({ products: res.data })
+			this.props.dispatch(loadProducts(res.data));
 		});
 	}
 
 	handleAddToCart = (product) => {
-		this.setState({
-			cart: [...this.state.cart, product]
-		});
+		// this.setState({
+		// 	cart: [...this.state.cart, product]
+		// });
+		this.props.dispatch(addToCart(product));
 	}
 
 	handleRemove = (index) => {
-		this.setState({
-			cart: this.state.cart.filter(
-				(item, itemIndex) => index !== itemIndex
-			)
-		})
+		// this.setState({
+		// 	cart: this.state.cart.filter(
+		// 		(item, itemIndex) => index !== itemIndex
+		// 	)
+		// })
+		this.props.dispatch(removeFromCart(index));
 	}
 
 	render() {
@@ -46,7 +44,7 @@ export default class ShoppingCart extends React.Component {
 			backgroundColor: 'grey'
 		};
 
-		const products = this.state.products.map(
+		const products = this.props.products.map(
 			product => (
 				<div>
 					<img src={product.image} width={100} />
@@ -62,7 +60,7 @@ export default class ShoppingCart extends React.Component {
 			)
 		);
 
-		const cartItems = this.state.cart.map(
+		const cartItems = this.props.cart.map(
 			(item, index) => (
 				<li>
 					<span> { `${item.product} @ $${item.price}` } </span>
@@ -76,7 +74,7 @@ export default class ShoppingCart extends React.Component {
 		// (prev, curr) => prev + curr
 		//)
 		// sum = 10;
-		const totalPrice = this.state.cart.reduce(
+		const totalPrice = this.props.cart.reduce(
 			(prev, curr) => prev + curr.price, 0
 		);
 
@@ -84,16 +82,27 @@ export default class ShoppingCart extends React.Component {
 			<div>
 				{/*<pre>{JSON.stringify(this.state, null, 2)}</pre>*/}
 				<div>
-					{this.state.products.length === 0 ? 'Loading...' : products }
+					{this.props.products.length === 0 ? 'Loading...' : products }
 				</div>
 				<div style={shoppingCartStyle}>
 					<h1> My shopping cart </h1>
 					<ul>
 						{cartItems}
-						<p>Total: ${this.state.cart.length === 0 ? 0 : totalPrice}</p>
+						<p>Total: ${this.props.cart.length === 0 ? 0 : totalPrice}</p>
 					</ul>
 				</div>
 			</div>
 		);
 	}
 }
+
+const mapStateToProps = (state) => {
+	return {
+		products: state.shoppingCart.products,
+		cart: state.shoppingCart.cart
+	}
+}
+
+let ShoppingCartApp = connect(mapStateToProps)(ShoppingCart);
+export default ShoppingCartApp;
+
