@@ -4,12 +4,15 @@ import TodoBoard from './TodoBoard';
 import { storedTodos } from './db';
 import { connect } from 'react-redux';
 import { addTodo, loadTodos, handleInput } from '../redux/actions';
+// import { bindActionCreator } from 'redux';
+// import * as TodoActions from './redux/actions';
 
 class TodoApp extends React.Component {
 	componentDidMount() {
 		// call to server
 		storedTodos((data: Array<string>) => {
 			this.props.dispatch(loadTodos(data));
+
 		})
 	}
 
@@ -56,6 +59,8 @@ class TodoApp extends React.Component {
 				<TodoBoard 
 					myTodos={this.props.myTodos}
 					handleDelete={this.handleDelete}
+					isSaving={this.props.isSaving}
+					error={this.props.error}
 				/>
 			</div>
 		);
@@ -65,9 +70,17 @@ class TodoApp extends React.Component {
 const mapStateToProps = (state) => {
 	return {
 		myTodos: state.todo.myTodos,
-		inputValue: state.todo.inputValue
+		inputValue: state.todo.inputValue,
+		isSaving: state.todo.isSaving,
+		error: state.todo.error
 	}
 }
+
+// const mapDispatchToProps = (dispatch) => {
+// 	return {
+// 		// ..
+// 	}
+// }
 
 let ReduxTodoApp = connect(mapStateToProps)(TodoApp);
 export default ReduxTodoApp;

@@ -6,6 +6,7 @@ import ShoppingCart from './ShoppingCart';
 import axios from 'axios';
 import configureStore from './redux/store.js';
 import { Provider } from 'react-redux';
+import ReduxForm from './redux-form/form';
 
 const initialState = {
 	todo: {
@@ -25,6 +26,7 @@ class App extends React.Component {
 			<div>
 				<ShoppingCart />
 				<TodoApp />
+				<ReduxForm />
 			</div>
 		);
 	}

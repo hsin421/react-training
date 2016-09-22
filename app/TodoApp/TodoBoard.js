@@ -21,6 +21,8 @@ export default class TodoBoard extends React.Component {
 				todo={todo} 
 				handleDelete={this.props.handleDelete}
 				index={index}
+				isSaving={this.props.isSaving}
+				todoArrayLength={this.props.myTodos.length}
 			/>
 		);
 
@@ -28,6 +30,11 @@ export default class TodoBoard extends React.Component {
 			<div style={todoBoardStyle}>
 				<ul>
 					{this.props.myTodos.length > 0 ? todos : 'Loading please wait...'}
+					{this.props.error && 
+						<span style={{color: 'red'}}> 
+							{this.props.error} 
+						</span>
+					}
 				</ul>
 			</div>
 		);
